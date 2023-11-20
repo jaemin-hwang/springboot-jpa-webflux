@@ -20,7 +20,7 @@ public class SampleHandler {
     private final SampleService sampleService;
     private final SampleValidator sampleValidator;
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Mono<ServerResponse> findAll(ServerRequest request) {
         log.info("]-----] SampleHandler::findAll call [-----[ ");
         Integer page = request.queryParam("page").isPresent() ? Integer.parseInt(request.queryParam("page").get()) - 1 : 0;
@@ -30,12 +30,10 @@ public class SampleHandler {
                 .flatMap(memberId ->
                         Mono.just(sampleService.findAll(page, size, memberId))
                 )
-                .flatMap(sampleViews -> ok().body(fromValue(sampleViews)))
-                .switchIfEmpty(notFound().build());
-
+                .flatMap(sampleViews -> ok().body(fromValue(sampleViews)));
     }
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Mono<ServerResponse> findById(ServerRequest request) {
         log.info("]-----] SampleHandler::findById call [-----[ ");
         Long id = Long.parseLong(request.pathVariable("id"));
@@ -51,19 +49,17 @@ public class SampleHandler {
     public Mono<ServerResponse> post(ServerRequest request) {
         log.info("]-----] SampleHandler::post call [-----[ ");
         Mono<SampleView> sampleViewMono = request.bodyToMono(SampleView.class).doOnNext(sampleValidator::postValidate);
-        ;
+
         return request.principal()
                 .flatMap(p -> Mono.just(Long.parseLong(p.getName())))
                 .flatMap(memberId ->
-                        sampleViewMono.flatMap(sampleView -> Mono.just(sampleService.post(sampleView, memberId)))
+                        sampleViewMono.flatMap(sampleView -> Mono.just(sampleService.post(sampleView)))
                 )
-                .flatMap(sampleViews -> ok().body(fromValue(sampleViews)))
-                .switchIfEmpty(badRequest().build());
-
+                .flatMap(sampleViews -> ok().body(fromValue(sampleViews)));
     }
 
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Mono<ServerResponse> put(ServerRequest request) {
         log.info("]-----] SampleHandler::delete call [-----[ ");
         Mono<SampleView> sampleViewMono = request.bodyToMono(SampleView.class).doOnNext(sampleValidator::postValidate);
@@ -78,7 +74,7 @@ public class SampleHandler {
 
     }
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Mono<ServerResponse> delete(ServerRequest request) {
         log.info("]-----] SampleHandler::delete call [-----[ ");
         Long id = Long.parseLong(request.pathVariable("id"));

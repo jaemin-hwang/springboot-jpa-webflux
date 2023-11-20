@@ -23,15 +23,4 @@ public class AuthHandler {
                 .switchIfEmpty(badRequest().build());
 
     }
-
-    public Mono<ServerResponse> getAuthInfo(ServerRequest request) {
-        log.info("]-----] AuthHandler::token call [-----[ ");
-
-        return request.principal()
-                .map(p -> p.getName())
-                .flatMap(result -> ok().body(BodyInserters.fromValue(result)))
-                .switchIfEmpty(status(401).build());
-
-    }
-
 }

@@ -43,9 +43,9 @@ public class SampleService {
     }
 
     @Transactional
-    public SampleView post(SampleView sampleView, Long memberId) {
+    public SampleView post(SampleView sampleView) {
         Sample sample = new Sample();
-        sample.setCreatedId(memberId);
+        sample.setCreatedId(1L);
         return sampleEntityToView(sampleRepository.save(sampleViewToEntity(sampleView, sample)));
     }
 

@@ -22,7 +22,4 @@ public class Sample extends BaseEntity {
     private String title;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
-    private SampleStatus status = SampleStatus.INIT;
-
-
 }
